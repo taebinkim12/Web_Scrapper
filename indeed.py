@@ -67,3 +67,4 @@ def extract_indeed_jobs(max_page):
             title = job.find("h2",{"class":"title"}).find("a")["title"]
             print(title)
     return jobs
+

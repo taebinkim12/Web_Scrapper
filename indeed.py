@@ -8,7 +8,8 @@ from bs4 import BeautifulSoup
 LIMIT = 50
 INDEED_URL = f"https://www.indeed.com/jobs?as_and=python&limit={LIMIT}"
 
-# returns: int (last page)      --> This does not work anymore as indeed's webpage structure(pagination) is slightly adjusted
+# returns: int (last page)      
+# --> This does not work anymore as indeed's webpage structure(pagination) is slightly adjusted
 def indeed_extract_page_by_nico():
     result = requests.get(INDEED_URL)
     # print(indeed_testing.text)                                                --> getting the HTML information
@@ -31,7 +32,6 @@ def indeed_extract_page_by_nico():
 # Returning int (the number of pages)
 def extract_indeed_pages_new():
     start = 0
-    # start_int_list = [0]
     result = requests.get(INDEED_URL)
 
     soup = BeautifulSoup(result.text, 'html.parser')
@@ -46,8 +46,6 @@ def extract_indeed_pages_new():
         if next_button == None:
             break
         start = int(start) + 1
-        # start_int_list.append(start)
-        # print(f"start_int_list:{start_int_list}")
     
     return int(start) + 1
 

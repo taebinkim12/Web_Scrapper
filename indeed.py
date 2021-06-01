@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 LIMIT = 50
 INDEED_URL = f"https://www.indeed.com/jobs?as_and=python&limit={LIMIT}"
 
-# returns: int (last page)
+# returns: int (last page)      --> This does not work anymore as indeed's webpage structure(pagination) is slightly adjusted
 def indeed_extract_page_by_nico():
     result = requests.get(INDEED_URL)
     # print(indeed_testing.text)                                                --> getting the HTML information
@@ -28,7 +28,7 @@ def indeed_extract_page_by_nico():
     return max_page
 
 
-# Returning ints
+# Returning int (the number of pages)
 def extract_indeed_pages_new():
     start = 0
     # start_int_list = [0]
@@ -52,19 +52,43 @@ def extract_indeed_pages_new():
     return int(start) + 1
 
 
+# takes html(soup)
+# Retruns a dictionary (with title, company name, location, and Job_id on indeed)
+def extract_job(job_card):
+    title = job_card.find("h2",{"class":"title"}).find("a")["title"]
+    
+    company = job_card.find("span", {"class": "company"})
+    if company:
+        company_anchor = company.find("a")
+        if company_anchor is not None:
+            company = str(company_anchor.string)
+        else :
+            company = str(company.string)
+            company = company.strip()
+    else :
+        company = None
+    
+    locaiton = job_card.find("div", {"class": "recJobLoc"})["data-rc-loc"]
+
+    job_id = job_card["data-jk"]                                                # [] for finding an attribute in "div" in html
+
+    return {'title': title, 
+            'company': company, 
+            'location': locaiton, 
+            'apply_link': f"https://www.indeed.com/viewjob?&jk={job_id}&from=web&vjs=3"}
+            
+
 # Takes int
-# Returning...?
+# Returns array (of all jobs)
 def extract_indeed_jobs(max_page):
-    # print(max_page)
     jobs = []
     for page in range (max_page):
+        print(f"Now at page {page + 1}")
         result = requests.get(f"{INDEED_URL}&start={page*LIMIT}")
         soup = BeautifulSoup(result.text, 'html.parser')
         job_cards = soup.find_all("div", {"class": "jobsearch-SerpJobCard"})        # list of soups
-        for job in job_cards:
-            #title = job.find("div", {"class":"title"})
-            #anchor = title.find("a")["title"]
-            title = job.find("h2",{"class":"title"}).find("a")["title"]
-            print(title)
+        for job_card in job_cards:
+            job = extract_job(job_card)
+            jobs.append(job)
     return jobs
 

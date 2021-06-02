@@ -1,7 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
-from indeed import extract_indeed_pages_new, extract_indeed_jobs
+from indeed import get_jobs as indeed_get_jobs
 
-max_indeed_pages_new = extract_indeed_pages_new()
+# https://www.indeed.com/q-python-jobs.html
+# https://www.indeed.com/jobs?as_and=python&limit=50
+# https://stackoverflow.com/jobs?q=python
 
-indeed_jobs = extract_indeed_jobs(max_indeed_pages_new)
+indeed_jobs = indeed_get_jobs()

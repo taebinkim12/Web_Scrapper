@@ -1,10 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 
-# https://www.indeed.com/q-python-jobs.html
-# https://www.indeed.com/jobs?as_and=python&limit=50
-# https://stackoverflow.com/jobs?q=python
-
 LIMIT = 50
 INDEED_URL = f"https://www.indeed.com/jobs?as_and=python&limit={LIMIT}"
 
@@ -30,13 +26,13 @@ def indeed_extract_page_by_nico():
 
 
 # Returning int (the number of pages)
-def extract_indeed_pages_new():
+def extract_pages_new():
     start = 0
     result = requests.get(INDEED_URL)
 
-    soup = BeautifulSoup(result.text, 'html.parser')
+    soup = BeautifulSoup(result.text, 'html.parser')                            # A soup to extract HTML from website
 
-    next_button = soup.find("a", {"aria-label":"Next"})
+    next_button = soup.find("a", {"aria-label":"Next"})                 
 
     while next_button:
         indeed_url_updated = f"https://www.indeed.com/jobs?q=python&limit=50&start={str(start*50)}"
@@ -50,7 +46,7 @@ def extract_indeed_pages_new():
     return int(start) + 1
 
 
-# takes html(soup)
+# takes html(soup named 'job_card')
 # Retruns a dictionary (with title, company name, location, and Job_id on indeed)
 def extract_job(job_card):
     title = job_card.find("h2",{"class":"title"}).find("a")["title"]
@@ -78,7 +74,7 @@ def extract_job(job_card):
 
 # Takes int
 # Returns array (of all jobs)
-def extract_indeed_jobs(max_page):
+def extract_jobs(max_page):
     jobs = []
     for page in range (max_page):
         print(f"Now at page {page + 1}")
@@ -90,3 +86,9 @@ def extract_indeed_jobs(max_page):
             jobs.append(job)
     return jobs
 
+
+# Wrapper Function
+def get_all_jobs():
+    max_page = extract_pages_new()
+    indeed_jobs = extract_jobs(max_page)
+    return indeed_jobs

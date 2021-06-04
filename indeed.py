@@ -62,13 +62,13 @@ def extract_job(job_card):
     else :
         company = None
     
-    locaiton = job_card.find("div", {"class": "recJobLoc"})["data-rc-loc"]
+    location = job_card.find("div", {"class": "recJobLoc"})["data-rc-loc"]
 
     job_id = job_card["data-jk"]                                                # [] for finding an attribute in "div" in html
 
     return {'title': title, 
             'company': company, 
-            'location': locaiton, 
+            'location': location, 
             'apply_link': f"https://www.indeed.com/viewjob?&jk={job_id}&from=web&vjs=3"}
             
 
@@ -77,7 +77,7 @@ def extract_job(job_card):
 def extract_jobs(max_page):
     jobs = []
     for page in range (max_page):
-        print(f"Now at page {page + 1}")
+        print(f"id: Scrapping page {page + 1}")
         result = requests.get(f"{INDEED_URL}&start={page*LIMIT}")
         soup = BeautifulSoup(result.text, 'html.parser')
         job_cards = soup.find_all("div", {"class": "jobsearch-SerpJobCard"})        # list of soups

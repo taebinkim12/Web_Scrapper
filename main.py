@@ -8,5 +8,7 @@ from so import get_all_jobs as so_get_jobs
 # https://stackoverflow.com/jobs?q=python
 
 
-# indeed_jobs = indeed_get_jobs()
+indeed_jobs = indeed_get_jobs()
 so_jobs = so_get_jobs()
+
+jobs = indeed_jobs + so_jobs

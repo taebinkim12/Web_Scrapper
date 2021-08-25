@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request
 
 app = Flask("SuperScrapper")
 
@@ -12,12 +12,8 @@ def test():
 
 @app.route("/report")
 def report():
-    word = request.args.get('word')                 # Comes as Dictionary
-    if word:
-        word = word.lower()
-    else:
-        return redirect("/")
-    return render_template("report.html", searchBy = word)
+    word = (request.args.get('word'))                 # Comes as Dictionary
+    return render_template("report.html", searchBy= word)
 
 # @app.route("/<username>")                           # Dynamic URLs
 # def username(username):

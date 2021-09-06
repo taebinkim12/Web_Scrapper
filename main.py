@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect
+from Scrapper import get_jobs
 
 app = Flask("SuperScrapper")
 
@@ -8,13 +9,15 @@ def home():
 
 @app.route("/test")                                 # "@" --> Decorator: looks for a function to execute underneath
 def test():
-    return "contact me!"
+    return "Testing!"
 
 @app.route("/report")
 def report():
     word = (request.args.get('word'))                 # Comes as Dictionary
     if word:
         word = word.lower()
+        jobs = get_jobs(word)
+        print(jobs)
     else:
         return redirect("/")
     return render_template("report.html", searchBy= word)

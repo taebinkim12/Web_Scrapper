@@ -2,12 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 from requests.api import request
 
-SO_URL = "https://stackoverflow.com/jobs?q=python"
-
 
 # returns int
-def extract_last_page():
-    result = requests.get(SO_URL)
+def extract_last_page(url):
+    result = requests.get(url)
     soup = BeautifulSoup(result.text, 'html.parser')
     pagination = soup.find("div", {"class": "s-pagination"})
     pages = pagination.find_all("a")
@@ -34,11 +32,11 @@ def extract_job(result):
     
 
 
-def extract_jobs(last_page):
+def extract_jobs(last_page, url):
     jobs = []
     for page in range(last_page):
-        print(f"SO: Scrapping page {page + 1}")
-        result = requests.get(f"{SO_URL}&pg={page + 1}")
+        print(f"StackOverflow: Scrapping page {page + 1}")
+        result = requests.get(f"{url}&pg={page + 1}")
         soup = BeautifulSoup(result.text, 'html.parser')
         results = soup.find_all("div", {"class":"-job"}) 
         for result in results:
@@ -49,7 +47,10 @@ def extract_jobs(last_page):
 
 
 
-def get_all_jobs():
-    last_page = extract_last_page()
-    jobs = extract_jobs(last_page)
+def get_jobs(word):
+    url = f"https://stackoverflow.com/jobs?q={word}"
+    print(url)
+    last_page = extract_last_page(url)
+    print(last_page)
+    jobs = extract_jobs(last_page, url)
     return jobs

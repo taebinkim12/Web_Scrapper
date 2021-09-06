@@ -9,21 +9,18 @@ def extract_last_page(url):
     soup = BeautifulSoup(result.text, 'html.parser')
     pagination = soup.find("div", {"class": "s-pagination"})
     pages = pagination.find_all("a")
-    pages = pages[-2]
-    last_page = pages.get_text().strip()
+    last_page = pages[-2].get_text().strip()
     return int(last_page)
 
 
 def extract_job(result):
     title = result.find("h2", {"class":"mb4"}).find("a")["title"]
-
     company, location = result.find("h3", {"class":"fc-black-700"}).find_all("span", recursive = 0)
     company = company.get_text().strip()
-    location = location.get_text().strip()
+    location = location.get_text().strip().strip("-").strip(" \r").strip("\n")
 
     job_id = result["data-jobid"]
     apply_link = f"https://stackoverflow.com/jobs/{job_id}"
-    # print(apply_link)
     
     return {'title': title, 
             'company': company, 
